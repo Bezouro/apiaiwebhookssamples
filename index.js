@@ -74,6 +74,9 @@ app.post('/webhook', function (req, res) {
             });
     }
     else if (req.body.queryResult.parameters['wikisearchterm']) {
+
+        console.log("buscando na wikipedia");
+
         var searchTerm = req.body.queryResult.parameters['wikisearchterm'];
         callWikiPediaApi(searchTerm)
             .then((output) => {
@@ -83,6 +86,7 @@ app.post('/webhook', function (req, res) {
                     displayText = `Here is what I found in Wikipedia about ${output[1][0]}: ${output[2][0]}`;
                     let telegramText = htmlEntities(`Here is what I found in Wikipedia about *${output[1][0]}*: ${output[2][0]} \n\n Read more at [WikiPedia](${output[3][0]})`);
                     result = toApiAiResponseMessage(displayText, displayText, toTelgramObject(telegramText, 'Markdown'));
+                    console.log("resultado: " + result);
                 }
                 res.setHeader('Content-Type', 'application/json');
                 if (result) {
