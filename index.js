@@ -19,8 +19,11 @@ app.get('/dummyget', function (req, res) {
 
 app.post('/webhook', function (req, res) {
 
-    console.log(req);
-    console.log(res);
+    console.log("");
+    console.log("");
+    console.log(req.body.queryResult);
+    console.log("");
+    console.log("");
     
     if (req.body.queryResult.parameters['Bored']) {
         callChuckNorrisFact()
