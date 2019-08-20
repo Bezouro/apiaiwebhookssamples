@@ -22,7 +22,7 @@ app.post('/webhook', function (req, res) {
     console.log(req);
     console.log(res);
     
-    if (req.body.result.parameters['Bored']) {
+    if (req.body.queryResult.parameters['Bored']) {
         callChuckNorrisFact()
             .then((output) => {
                 let result = toApiAiResponseMessage(output.value, output.value, toTelgramObject(output.value, 'Markdown'));
@@ -31,8 +31,8 @@ app.post('/webhook', function (req, res) {
             })
             .catch(errorHandler);
     }
-    else if (req.body.result.parameters['FoodItem']) {
-        var fooditem = req.body.result.parameters['FoodItem'];
+    else if (req.body.queryResult.parameters['FoodItem']) {
+        var fooditem = req.body.queryResult.parameters['FoodItem'];
         callRecipePuppy(fooditem)
             .then((output) => {
 
@@ -45,12 +45,12 @@ app.post('/webhook', function (req, res) {
             })
             .catch(errorHandler);
     }
-    else if (req.body.result.parameters['currency-from'] && req.body.result.parameters['currency-to']) {
-        var currencyFrom = req.body.result.parameters['currency-from'];
-        var currencyTo = req.body.result.parameters['currency-to'];
+    else if (req.body.queryResult.parameters['currency-from'] && req.body.queryResult.parameters['currency-to']) {
+        var currencyFrom = req.body.queryResult.parameters['currency-from'];
+        var currencyTo = req.body.queryResult.parameters['currency-to'];
         var number = 1.0;
-        if (req.body.result.parameters['number']) {
-            number = parseFloat(req.body.result.parameters['number']);
+        if (req.body.queryResult.parameters['number']) {
+            number = parseFloat(req.body.queryResult.parameters['number']);
             if (number <= 0) {
                 number = 1.0;
             }
@@ -70,8 +70,8 @@ app.post('/webhook', function (req, res) {
                 res.send(JSON.stringify(result));
             });
     }
-    else if (req.body.result.parameters['wikisearchterm']) {
-        var searchTerm = req.body.result.parameters['wikisearchterm'];
+    else if (req.body.queryResult.parameters['wikisearchterm']) {
+        var searchTerm = req.body.queryResult.parameters['wikisearchterm'];
         callWikiPediaApi(searchTerm)
             .then((output) => {
                 let displayText = `Nothing Found for: ${searchTerm}`;
