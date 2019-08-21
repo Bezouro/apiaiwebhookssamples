@@ -217,7 +217,7 @@ function callClimaTempoApi(local) {
     });
 
     //let pg = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
-    pg.query(`SELECT name,id FROM locationids WHERE name=${local};`, (err, res) => {
+    pg.query(`SELECT name,id FROM locationids WHERE name='${local}';`, (err, res) => {
         if (err) throw err;
         if(rows[0]){
             console.log("01");
