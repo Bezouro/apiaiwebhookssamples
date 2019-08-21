@@ -1,7 +1,7 @@
 const http = require('http');
 const https = require('https');
 const express = require('express');
-const Postgre = require('pg');
+const { Postgre } = require('pg');
 const bodyParser = require('body-parser');
 const app = express();
 
