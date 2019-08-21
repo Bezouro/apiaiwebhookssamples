@@ -204,9 +204,9 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
 
 function callClimaTempoApi(local) {
 
-    const postgre = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
+    let pg = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
 
-    postgre.query('SELECT name,id FROM locationids;', (err, res) => {
+    pg.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
             console.log("a ->" + JSON.stringify(row));
@@ -214,41 +214,40 @@ function callClimaTempoApi(local) {
         //postgre.end();
     });
 
-    let rows = postgre.query(`SELECT name,id FROM locationids WHERE name=${local};`, (err, res) => {
+    pg.query(`SELECT name,id FROM locationids WHERE name=${local};`, (err, res) => {
         if (err) throw err;
+        if(rows[0]){
+            console.log("01");
+            console.log("a ->" + JSON.stringify(rows[0]));
+        }
+        else{
+            console.log("02");
+            let result = new Promise((resolve, reject) => {
+                //let tempurl = 'city?name=São Paulo&state=SP&token=your-app-token';
+                let url = `${ClimaTempoHost}/locale/city?name=${local}&token=${apiKeyClimaTempo}`;
+                https.get(url, (res) => {
+                    let body = '';
+                    res.on('data', (d) => body += d);
+                    res.on('end', () => {
+                        let jO = JSON.parse(body);
+                        resolve(jO);
+                        console.log(jO);
+                    });
+                    res.on('error', (error) => {
+                        reject(error);
+                    });
+                });
+            });
+
+            console.log(result);
+
+
+        }
         // for (let row of res.rows) {
         //     console.log(JSON.stringify(row));
         // }
-        postgre.end();
+        pg.end();
     });
-
-    if(rows[0]){
-        console.log("01");
-        console.log("a ->" + JSON.stringify(rows[0]));
-    }
-    else{
-        console.log("02");
-        let result = new Promise((resolve, reject) => {
-            //let tempurl = 'city?name=São Paulo&state=SP&token=your-app-token';
-            let url = `${ClimaTempoHost}/locale/city?name=${local}&token=${apiKeyClimaTempo}`;
-            https.get(url, (res) => {
-                let body = '';
-                res.on('data', (d) => body += d);
-                res.on('end', () => {
-                    let jO = JSON.parse(body);
-                    resolve(jO);
-                    console.log(jO);
-                });
-                res.on('error', (error) => {
-                    reject(error);
-                });
-            });
-        });
-
-        console.log(result);
-
-
-    }
 
     return new Promise((resolve, reject) => {
         let url = `${ClimaTempoHost}/weather/locale/3477/current?token=${apiKeyClimaTempo}`;
