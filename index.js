@@ -242,7 +242,13 @@ function callClimaTempoApi(local) {
                 });
             });
 
-            console.log(result);
+            result.then(
+            // apenas logamos a mensagem e o valor
+            function(result) {
+                console.log(result);
+            });
+
+            //console.log(result);
 
 
         }
