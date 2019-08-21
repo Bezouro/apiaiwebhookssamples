@@ -16,7 +16,7 @@ const ClimaTempoHost = 'http://apiadvisor.climatempo.com.br/api/v1/'; //http://a
 
 const apiKeyClimaTempo = 'fe159cd0aa11b594270ba7dc27a132a3';
 
-postgre.query('CREATE TABLE IF NOT EXISTS locationids(name VARCHAR, id integer);');
+postgre.query('CREATE TABLE IF NOT EXISTS locationids(name VARCHAR, id integer);', (err, res) => {});
 postgre.end();
 
 /*postgre.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
