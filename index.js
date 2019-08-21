@@ -217,7 +217,7 @@ function callClimaTempoApi(local) {
     postgre.query(`SELECT name,id FROM locationids WHERE name=${local};`, (err, res) => {
         if (err) throw err;
         if(rows[0]){
-            console.log(JSON.stringify(rows[0]));
+            console.log("a ->" + JSON.stringify(rows[0]));
         }
         else{
 
