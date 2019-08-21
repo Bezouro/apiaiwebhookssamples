@@ -1,12 +1,12 @@
 const http = require('http');
 const https = require('https');
 const express = require('express');
-const { Client } = require('pg');
+const { Pool } = require('pg');
 const bodyParser = require('body-parser');
 const app = express();
 
 app.use(bodyParser.json());
-const postgre = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
+const postgre = new Pool({connectionString: process.env.DATABASE_URL,ssl: true,});
 
 const recipepuppyHost = 'http://www.recipepuppy.com/api/?q=';
 const currencyConvertHost = "http://api.fixer.io/latest?";
@@ -16,7 +16,6 @@ const ClimaTempoHost = 'http://apiadvisor.climatempo.com.br/api/v1/'; //http://a
 
 const apiKeyClimaTempo = 'fe159cd0aa11b594270ba7dc27a132a3';
 
-postgre.connect();
 postgre.query('CREATE TABLE IF NOT EXISTS locationids(name VARCHAR, id integer);');
 
 /*postgre.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
@@ -203,7 +202,7 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
 }
 
 function callClimaTempoApi(local) {
-    
+
     postgre.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
