@@ -1,18 +1,32 @@
 const http = require('http');
 const https = require('https');
 const express = require('express');
+const Postgre = require('pg');
 const bodyParser = require('body-parser');
 const app = express();
 
 app.use(bodyParser.json());
+const postgre = new Postgre({connectionString: process.env.DATABASE_URL,ssl: true,});
 
 const recipepuppyHost = 'http://www.recipepuppy.com/api/?q=';
 const currencyConvertHost = "http://api.fixer.io/latest?";
 const chucknorrisHost = 'https://api.chucknorris.io/jokes/random';
 const wikiPediaApiHost = 'https://pt.wikipedia.org/w/api.php?'; //https://www.mediawiki.org/wiki/API:Opensearch
-const apiClimaTempo = 'http://apiadvisor.climatempo.com.br/api/v1/'; //http://apiadvisor.climatempo.com.br/doc/index.html
+const ClimaTempoHost = 'http://apiadvisor.climatempo.com.br/api/v1/'; //http://apiadvisor.climatempo.com.br/doc/index.html
 
 const apiKeyClimaTempo = 'fe159cd0aa11b594270ba7dc27a132a3';
+
+postgre.connect();
+
+postgre.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  postgre.end();
+});
+
+
 
 app.get('/dummyget', function (req, res) {
     res.setHeader('Content-Type', 'application/json');
@@ -178,6 +192,25 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
     });
 }
 
+function callClimaTempoApi(type, params) {
+
+    if(type === '')
+
+    return new Promise((resolve, reject) => {
+        let url = `${ClimaTempoHost}/${type}/&format=${format}&action=${action}&limit=${limit}&profile=${profile}&search=${searchTerm}`;
+        https.get(url, (res) => {
+            let body = '';
+            res.on('data', (d) => body += d);
+            res.on('end', () => {
+                let jO = JSON.parse(body);
+                resolve(jO);
+            });
+            res.on('error', (error) => {
+                reject(error);
+            });
+        });
+    });
+}
 
 function toTelgramObject(text, parse_mode) {
     return {
@@ -189,7 +222,7 @@ function toTelgramObject(text, parse_mode) {
 function toApiAiResponseMessage(speech, displayText, telegramObject = null) {
     return {
         speech: speech,
-        displayText: displayText,
+        fulfillmentText: displayText,
         data: {
             telegram: telegramObject
         }
