@@ -17,16 +17,16 @@ const ClimaTempoHost = 'http://apiadvisor.climatempo.com.br/api/v1/'; //http://a
 const apiKeyClimaTempo = 'fe159cd0aa11b594270ba7dc27a132a3';
 
 postgre.connect();
+postgre.query('CREATE TABLE IF NOT EXISTS locationids(name VARCHAR, id integer);', () => {postgre.end();});
 
-postgre.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+/*postgre.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
   if (err) throw err;
   for (let row of res.rows) {
     console.log(JSON.stringify(row));
   }
   postgre.end();
 });
-
-
+*/
 
 app.get('/dummyget', function (req, res) {
     res.setHeader('Content-Type', 'application/json');
