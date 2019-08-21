@@ -234,7 +234,7 @@ function callClimaTempoApi(local) {
                     res.on('end', () => {
                         let jO = JSON.parse(body);
                         resolve(jO);
-                        console.log(jO);
+                        console.log(body);
                     });
                     res.on('error', (error) => {
                         reject(error);
@@ -243,7 +243,6 @@ function callClimaTempoApi(local) {
             });
 
             result.then(
-            // apenas logamos a mensagem e o valor
             function(result) {
                 console.log(result);
             });
