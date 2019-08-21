@@ -230,6 +230,7 @@ function callClimaTempoApi(local) {
                     res.on('end', () => {
                         let jO = JSON.parse(body);
                         resolve(jO);
+                        console.log(jO);
                     });
                     res.on('error', (error) => {
                         reject(error);
@@ -248,13 +249,14 @@ function callClimaTempoApi(local) {
     });
 
     return new Promise((resolve, reject) => {
-        let url = `${ClimaTempoHost}/${type}/&format=${format}&action=${action}&limit=${limit}&profile=${profile}&search=${searchTerm}`;
+        let url = `${ClimaTempoHost}/weather/locale/3477/current?token=${apiKeyClimaTempo}`;
         https.get(url, (res) => {
             let body = '';
             res.on('data', (d) => body += d);
             res.on('end', () => {
                 let jO = JSON.parse(body);
                 resolve(jO);
+                console.log(jO);
             });
             res.on('error', (error) => {
                 reject(error);
