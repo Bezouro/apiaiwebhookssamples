@@ -17,7 +17,7 @@ const ClimaTempoHost = 'http://apiadvisor.climatempo.com.br/api/v1/'; //http://a
 const apiKeyClimaTempo = 'fe159cd0aa11b594270ba7dc27a132a3';
 
 postgre.connect();
-postgre.query('CREATE TABLE IF NOT EXISTS locationids(name VARCHAR, id integer);', () => {postgre.end();});
+postgre.query('CREATE TABLE IF NOT EXISTS locationids(name VARCHAR, id integer);');
 
 /*postgre.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
   if (err) throw err;
@@ -245,8 +245,6 @@ function callClimaTempoApi(local) {
         
     });
 
-    postgre.end();
-
     return new Promise((resolve, reject) => {
         let url = `${ClimaTempoHost}/${type}/&format=${format}&action=${action}&limit=${limit}&profile=${profile}&search=${searchTerm}`;
         https.get(url, (res) => {
@@ -293,3 +291,5 @@ function errorHandler(error) {
 app.listen((process.env.PORT || 5000), function () {
     console.log("Server listening");
 });
+
+postgre.end();
