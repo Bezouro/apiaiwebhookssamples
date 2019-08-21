@@ -209,7 +209,7 @@ function callClimaTempoApi(local) {
     postgre.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
-            console.log(JSON.stringify(row));
+            console.log("a ->" + JSON.stringify(row));
         }
         //postgre.end();
     });
@@ -217,10 +217,11 @@ function callClimaTempoApi(local) {
     postgre.query(`SELECT name,id FROM locationids WHERE name=${local};`, (err, res) => {
         if (err) throw err;
         if(rows[0]){
+            console.log("01");
             console.log("a ->" + JSON.stringify(rows[0]));
         }
         else{
-
+            console.log("02");
             let result = new Promise((resolve, reject) => {
                 //let tempurl = 'city?name=São Paulo&state=SP&token=your-app-token';
                 let url = `${ClimaTempoHost}/locale/city?name=${local}&token=${apiKeyClimaTempo}`;
