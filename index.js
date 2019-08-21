@@ -192,9 +192,48 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
     });
 }
 
-function callClimaTempoApi(type, params) {
+function callClimaTempoApi(local) {
 
-    if(type === '')
+    postgre.query('SELECT name,id FROM locationids;', (err, res) => {
+        if (err) throw err;
+        for (let row of res.rows) {
+            console.log(JSON.stringify(row));
+        }
+        postgre.end();
+    });
+
+    postgre.query(`SELECT name,id FROM locationids WHERE name=${local};`, (err, res) => {
+        if (err) throw err;
+        if(rows[0]){
+            console.log(JSON.stringify(rows[0]));
+        }
+        else{
+
+            let result = new Promise((resolve, reject) => {
+                //let tempurl = 'city?name=São Paulo&state=SP&token=your-app-token';
+                let url = `${ClimaTempoHost}/locale/city?name=${local}&token=${apiKeyClimaTempo}`;
+                https.get(url, (res) => {
+                    let body = '';
+                    res.on('data', (d) => body += d);
+                    res.on('end', () => {
+                        let jO = JSON.parse(body);
+                        resolve(jO);
+                    });
+                    res.on('error', (error) => {
+                        reject(error);
+                    });
+                });
+            });
+
+            console.log(result);
+
+
+        }
+        // for (let row of res.rows) {
+        //     console.log(JSON.stringify(row));
+        // }
+        postgre.end();
+    });
 
     return new Promise((resolve, reject) => {
         let url = `${ClimaTempoHost}/${type}/&format=${format}&action=${action}&limit=${limit}&profile=${profile}&search=${searchTerm}`;
