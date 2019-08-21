@@ -1,12 +1,12 @@
 const http = require('http');
 const https = require('https');
 const express = require('express');
-const { Pool } = require('pg');
+const { Client } = require('pg');
 const bodyParser = require('body-parser');
 const app = express();
 
 app.use(bodyParser.json());
-let postgre = new Pool({connectionString: process.env.DATABASE_URL,ssl: true,});
+let postgre = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
 
 const recipepuppyHost = 'http://www.recipepuppy.com/api/?q=';
 const currencyConvertHost = "http://api.fixer.io/latest?";
@@ -36,7 +36,7 @@ app.get('/dummyget', function (req, res) {
 
 app.post('/webhook', function (req, res) {
 
-    let postgre = new Pool({connectionString: process.env.DATABASE_URL,ssl: true,});
+    let postgre = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
 
     console.log("");
     console.log("");
