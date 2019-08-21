@@ -24,7 +24,7 @@ app.post('/webhook', function (req, res) {
 
     console.log("");
     console.log("");
-    console.log(req.body.queryResult);
+    console.log(req.body.queryResult.action);
     console.log("");
     console.log("");
     
