@@ -115,8 +115,18 @@ app.post('/webhook', function (req, res) {
             });
     }
     else {
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({ 'speech': "No Proper hook found", 'displayText': "No Proper hook found" }));
+
+        if(req.body.queryResult.action = 'pergunta.temperatura'){
+            var local = req.body.queryResult.parameters['geo-city'];
+
+            console.log("buscando no climatempo");
+            callClimaTempoApi(local)
+        }
+        else{
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({ 'speech': "No Proper hook found", 'displayText': "No Proper hook found" }));
+        }
+
     }
 });
 
