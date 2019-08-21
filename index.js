@@ -206,14 +206,17 @@ function callClimaTempoApi(local) {
 
     let pg = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
 
+    pg.connect();
+
     pg.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
             console.log("a ->" + JSON.stringify(row));
         }
-        //postgre.end();
+        //pg.end();
     });
 
+    //let pg = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
     pg.query(`SELECT name,id FROM locationids WHERE name=${local};`, (err, res) => {
         if (err) throw err;
         if(rows[0]){
