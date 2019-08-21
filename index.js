@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const app = express();
 
 app.use(bodyParser.json());
-let postgre = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
+const postgre = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
 
 const recipepuppyHost = 'http://www.recipepuppy.com/api/?q=';
 const currencyConvertHost = "http://api.fixer.io/latest?";
@@ -16,8 +16,8 @@ const ClimaTempoHost = 'http://apiadvisor.climatempo.com.br/api/v1/'; //http://a
 
 const apiKeyClimaTempo = 'fe159cd0aa11b594270ba7dc27a132a3';
 
-postgre.query('CREATE TABLE IF NOT EXISTS locationids(name VARCHAR, id integer);', (err, res) => {if (err) throw err;postgre.end();});
-
+postgre.connect();
+postgre.query('CREATE TABLE IF NOT EXISTS locationids(name VARCHAR, id integer);', () => {postgre.end();});
 
 /*postgre.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
   if (err) throw err;
@@ -35,8 +35,6 @@ app.get('/dummyget', function (req, res) {
 
 
 app.post('/webhook', function (req, res) {
-
-    let postgre = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
 
     console.log("");
     console.log("");
@@ -206,12 +204,14 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
 
 function callClimaTempoApi(local) {
 
-    
+    const postgre = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
+
     postgre.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
             console.log(JSON.stringify(row));
         }
+        //postgre.end();
     });
 
     postgre.query(`SELECT name,id FROM locationids WHERE name=${local};`, (err, res) => {
