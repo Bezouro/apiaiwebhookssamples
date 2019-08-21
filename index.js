@@ -203,8 +203,7 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
 }
 
 function callClimaTempoApi(local) {
-
-    postgre.connect();
+    
     postgre.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
