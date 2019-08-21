@@ -1,12 +1,12 @@
 const http = require('http');
 const https = require('https');
 const express = require('express');
-const { Postgre } = require('pg');
+const { Client } = require('pg');
 const bodyParser = require('body-parser');
 const app = express();
 
 app.use(bodyParser.json());
-const postgre = new Postgre({connectionString: process.env.DATABASE_URL,ssl: true,});
+const postgre = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
 
 const recipepuppyHost = 'http://www.recipepuppy.com/api/?q=';
 const currencyConvertHost = "http://api.fixer.io/latest?";
