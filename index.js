@@ -125,7 +125,9 @@ app.post('/webhook', function (req, res) {
             callOpenCageDataApi(local)
                 .then((loc) => {
                     callClimaTempoApi(loc)
-                    
+                        .then((json) => {
+                            console.log(json);
+                        });
                 });
         }
         else{
@@ -209,14 +211,16 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
 }
 
 function callOpenCageDataApi(location) {
-    "https://api.opencagedata.com/geocode/v1/json?key=e5d94660eeb4488d8c24f9e3db9b46de&q=londres&pretty=1&no_annotations=1&language=native"
     return new Promise((resolve, reject) => {
         let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`;
         https.get(url, (res) => {
             let body = '';
             res.on('data', (d) => body += d);
+
             res.on('end', () => {
                 let json = JSON.parse(body);
+
+                console.log(json);
 
                 if(json.results[0].components._type = 'city'){
                     resolve('q=' + json.results[0].components.city);
@@ -237,59 +241,6 @@ function callOpenCageDataApi(location) {
 }
 
 function callClimaTempoApi(local) {
-
-    let pg = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
-
-    pg.connect();
-
-    pg.query('SELECT name,id FROM locationids;', (err, res) => {
-        if (err) throw err;
-        for (let row of res.rows) {
-            console.log("a ->" + JSON.stringify(row));
-        }
-        //pg.end();
-    });
-
-    //let pg = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
-    pg.query(`SELECT name,id FROM locationids WHERE name='${local}';`, (err, res) => {
-        if (err) throw err;
-        if(res.rows[0]){
-            //console.log("01");
-            //console.log("a ->" + JSON.stringify(rows[0]));
-        }
-        else{
-            //console.log("02");
-            let result = new Promise((resolve, reject) => {
-                let url = `${openweathermapHost}/weather?${local}&appid=${apiKeyClimaTempo}`;
-                https.get(url, (res) => {
-                    let body = '';
-                    res.on('data', (d) => body += d);
-                    res.on('end', () => {
-                        let jO = JSON.parse(body);
-                        resolve(jO);
-                        //console.log(body);
-                    });
-                    res.on('error', (error) => {
-                        reject(error);
-                    });
-                });
-            });
-
-            result.then(
-            function(result) {
-                console.log(result);
-            });
-
-            //console.log(result);
-
-
-        }
-        // for (let row of res.rows) {
-        //     console.log(JSON.stringify(row));
-        // }
-        pg.end();
-    });
-
     return new Promise((resolve, reject) => {
         let url = `${openweathermapHost}/weather?q=${local}&appid=${apiKeyClimaTempo}`;
         https.get(url, (res) => {
@@ -298,7 +249,6 @@ function callClimaTempoApi(local) {
             res.on('end', () => {
                 let jO = JSON.parse(body);
                 resolve(jO);
-                console.log(jO);
             });
             res.on('error', (error) => {
                 reject(error);
