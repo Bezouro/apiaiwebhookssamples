@@ -123,12 +123,12 @@ app.post('/webhook', function (req, res) {
 
             for(varloc in local){
                 var value = local[varloc];
-                console.log(value);
                 if(!value == ''){
                     console.log(value);
                     console.log("buscando no climatempo");
                     callOpenCageDataApi(value)
                         .then((loc) => {
+                            console.log(loc);
                             callClimaTempoApi(loc)
                                 .then((json) => {
                                     console.log(json);
@@ -229,8 +229,6 @@ function callOpenCageDataApi(location) {
 
             res.on('end', () => {
                 let json = JSON.parse(body);
-
-                console.log(json);
 
                 if(json.results[0].components._type = 'city'){
                     resolve('q=' + json.results[0].components.city);
