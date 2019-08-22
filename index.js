@@ -212,7 +212,7 @@ function callOpenCageDataApi(location) {
             let body = '';
             res.on('data', (d) => body += d);
             res.on('end', () => {
-                let jO = JSON.parse(body);
+                let json = JSON.parse(body);
 
                 if(json.results[0].components._type = 'city'){
                     resolve('q=' + json.results[0].components.city);
@@ -240,7 +240,7 @@ function callClimaTempoApi(local) {
 
     let loc = callOpenCageDataApi(local);
 
-    Console.log(loc);
+    console.log(loc);
 
     pg.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
