@@ -173,8 +173,9 @@ app.post('/webhook', function (req, res) {
             var firstiteration = true;
 
             for(number in numeros){
-                resultado = resultado + number;
+                resultado = resultado + parseInt(number);
                 if(firstiteration){
+                    firstiteration = false;
                     calculo = calculo + ' ' + number;
                 }
                 else{
