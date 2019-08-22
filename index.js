@@ -12,9 +12,11 @@ const recipepuppyHost = 'http://www.recipepuppy.com/api/?q=';
 const currencyConvertHost = "http://api.fixer.io/latest?";
 const chucknorrisHost = 'https://api.chucknorris.io/jokes/random';
 const wikiPediaApiHost = 'https://pt.wikipedia.org/w/api.php?'; //https://www.mediawiki.org/wiki/API:Opensearch
-const ClimaTempoHost = 'https://apiadvisor.climatempo.com.br/api/v1'; //http://apiadvisor.climatempo.com.br/doc/index.html
+const openweathermapHost = 'https://api.openweathermap.org/data/2.5';
+const openCageDataHost = 'https://api.opencagedata.com/geocode/v1';
 
-const apiKeyClimaTempo = 'fe159cd0aa11b594270ba7dc27a132a3';
+const apiKeyClimaTempo = '386a097769d5f92888cbc4fdfbbc4cef';
+const apiKeyOpenCageData = 'e5d94660eeb4488d8c24f9e3db9b46de';
 
 postgre.connect();
 postgre.query('CREATE TABLE IF NOT EXISTS locationids(name VARCHAR, id integer);', () => {postgre.end();});
@@ -202,11 +204,36 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
     });
 }
 
+function callOpenCageDataApi(location) {
+    "https://api.opencagedata.com/geocode/v1/json?key=e5d94660eeb4488d8c24f9e3db9b46de&q=londres&pretty=1&no_annotations=1&language=native"
+    let request = new Promise((resolve, reject) => {
+        let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`;
+        https.get(url, (res) => {
+            let body = '';
+            res.on('data', (d) => body += d);
+            res.on('end', () => {
+                let jO = JSON.parse(body);
+                resolve(jO);
+            });
+            res.on('error', (error) => {
+                reject(error);
+            });
+        });
+    });
+
+    request.then(
+    function(json) {
+        console.log(json.results[0].components._type);
+        console.log(json.results[0].components.city);
+    });
+}
 function callClimaTempoApi(local) {
 
     let pg = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
 
     pg.connect();
+
+    callOpenCageDataApi(local);
 
     pg.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
@@ -226,8 +253,8 @@ function callClimaTempoApi(local) {
         else{
             console.log("02");
             let result = new Promise((resolve, reject) => {
-                //let tempurl = 'city?name=São Paulo&state=SP&token=your-app-token';
-                let url = `${ClimaTempoHost}/locale/city?name=${local}&token=${apiKeyClimaTempo}`;
+                let tempurl = 'weather?q=guarulhos&appid=386a097769d5f92888cbc4fdfbbc4cef';
+                let url = `${openweathermapHost}/weather?q=${local}&appid=${apiKeyClimaTempo}`;
                 https.get(url, (res) => {
                     let body = '';
                     res.on('data', (d) => body += d);
@@ -258,7 +285,7 @@ function callClimaTempoApi(local) {
     });
 
     return new Promise((resolve, reject) => {
-        let url = `${ClimaTempoHost}/weather/locale/3477/current?token=${apiKeyClimaTempo}`;
+        let url = `${openweathermapHost}/weather?q=${local}&appid=${apiKeyClimaTempo}`;
         https.get(url, (res) => {
             let body = '';
             res.on('data', (d) => body += d);
