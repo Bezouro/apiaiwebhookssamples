@@ -250,7 +250,7 @@ function callOpenCageDataApi(location) {
 
 function callClimaTempoApi(local) {
     return new Promise((resolve, reject) => {
-        let url = `${openweathermapHost}/weather?q=${local}&appid=${apiKeyClimaTempo}`;
+        let url = `${openweathermapHost}/weather?${local}&appid=${apiKeyClimaTempo}`;
         https.get(url, (res) => {
             let body = '';
             res.on('data', (d) => body += d);
