@@ -117,7 +117,7 @@ app.post('/webhook', function (req, res) {
     }
     else {
 
-        if(req.body.queryResult.action = 'pergunta.temperatura'){
+        if(req.body.queryResult.action == 'pergunta.temperatura'){
             var local = req.body.queryResult.parameters['local'];
             var tipo = req.body.queryResult.parameters['any'];
 
@@ -160,7 +160,7 @@ app.post('/webhook', function (req, res) {
 
             
         }
-        else if(req.body.queryResult.action = 'calculos.soma'){
+        else if(req.body.queryResult.action == 'calculos.soma'){
 
             console.log('Somando!');
 
