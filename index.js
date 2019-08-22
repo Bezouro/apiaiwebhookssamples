@@ -208,20 +208,23 @@ function callOpenCageDataApi(location) {
     "https://api.opencagedata.com/geocode/v1/json?key=e5d94660eeb4488d8c24f9e3db9b46de&q=londres&pretty=1&no_annotations=1&language=native"
     
     let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`;
-    let json = https.get(url, (response) => {
-        var body = '';
-        response.on('data', function(d) {
-            body += d;
-        });
-        response.on('end', function() {
+    
+    let body = '';
+    let response = https.get(url);
 
-            // Data reception is done, do whatever with it!
-            var parsed = JSON.parse(body);
-            callback(parsed);
-        });
+    response.on('data', function(d) {
+        body += d;
     });
 
+    response.on('end', function() {
+        var parsed = JSON.parse(body);
+        callback();
+    });
+
+    response.end()
+
     console.log(json);
+    console.log(body);
     console.log("");
 
     return 'Guarulhos';
