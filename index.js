@@ -164,15 +164,18 @@ app.post('/webhook', function (req, res) {
 
             console.log('Somando!');
 
-            var numeros = req.body.queryResult.parameters['number'];
+            let numeros = req.body.queryResult.parameters['number'];
 
             console.log(numeros);
 
-            var resultado = 0;
-            var calculo = '';
-            var firstiteration = true;
+            let resultado = 0;
+            let calculo = '';
+            let firstiteration = true;
 
             for(number in numeros){
+
+                console.log(number);
+
                 resultado = resultado + parseInt(number);
                 if(firstiteration){
                     firstiteration = false;
