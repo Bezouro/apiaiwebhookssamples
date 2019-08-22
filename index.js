@@ -15,7 +15,7 @@ const wikiPediaApiHost = 'https://pt.wikipedia.org/w/api.php?'; //https://www.me
 const openweathermapHost = 'https://api.openweathermap.org/data/2.5';
 const openCageDataHost = 'https://api.opencagedata.com/geocode/v1';
 
-const apiKeyClimaTempo = '386a097769d5f92888cbc4fdfbbc4cef';
+const apiKeyOpenWeatherMap = '386a097769d5f92888cbc4fdfbbc4cef';
 const apiKeyOpenCageData = 'e5d94660eeb4488d8c24f9e3db9b46de';
 
 postgre.connect();
@@ -128,7 +128,7 @@ app.post('/webhook', function (req, res) {
                     callOpenCageDataApi(value)
                         .then((loc) => {
                             console.log(loc);
-                            callClimaTempoApi(loc)
+                            callOpenWeatherMapApi(loc)
                                 .then((json) => {
                                     //console.log(json);
 
@@ -242,6 +242,7 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
 function callOpenCageDataApi(location) {
     return new Promise((resolve, reject) => {
         let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`;
+        console.log('Request URL: ' + url);
         https.get(url, (res) => {
             let body = '';
             res.on('data', (d) => body += d);
@@ -267,9 +268,10 @@ function callOpenCageDataApi(location) {
     });
 }
 
-function callClimaTempoApi(local) {
+function callOpenWeatherMapApi(local) {
     return new Promise((resolve, reject) => {
-        let url = `${openweathermapHost}/weather?${local}&units=metric&appid=${apiKeyClimaTempo}`;
+        let url = `${openweathermapHost}/weather?${local}&units=metric&appid=${apiKeyOpenWeatherMap}`;
+        console.log('Request URL: ' + url);
         https.get(url, (res) => {
             let body = '';
             res.on('data', (d) => body += d);
