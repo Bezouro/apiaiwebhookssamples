@@ -244,6 +244,12 @@ function callClimaTempoApi(local) {
 
     let loc = callOpenCageDataApi(local);
 
+    console.log("");
+    console.log("");
+    console.log(loc)
+    console.log("");
+    console.log("");
+
     pg.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
