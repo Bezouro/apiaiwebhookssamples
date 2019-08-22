@@ -163,19 +163,21 @@ app.post('/webhook', function (req, res) {
         else if(req.body.queryResult.action = 'calculos.soma'){
             var numeros = req.body.queryResult.parameters['number'];
 
+            console.log(numeros);
+
             var resultado = 0;
             var calculo = '';
             var firstiteration = true;
 
-            numeros.forEach(element => {
-                resultado = resultado + element;
+            for(number in numeros){
+                resultado = resultado + number;
                 if(firstiteration){
-                    calculo = calculo + ' ' + element;
+                    calculo = calculo + ' ' + number;
                 }
                 else{
-                    calculo = calculo + ' + ' + element ;
+                    calculo = calculo + ' + ' + number ;
                 }
-            });
+            }
 
             console.log('Resultado: ' + resultado);
             console.log('Calculo: ' + calculo);
