@@ -122,7 +122,11 @@ app.post('/webhook', function (req, res) {
             var local = req.body.queryResult.parameters['geo-city'];
 
             console.log("buscando no climatempo");
-            callClimaTempoApi(local)
+            callOpenCageDataApi(local)
+                .then((loc) => {
+                    callClimaTempoApi(loc)
+                    
+                });
         }
         else{
             res.setHeader('Content-Type', 'application/json');
@@ -238,10 +242,6 @@ function callClimaTempoApi(local) {
 
     pg.connect();
 
-    let loc = callOpenCageDataApi(local);
-
-    console.log(loc);
-
     pg.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
@@ -260,7 +260,7 @@ function callClimaTempoApi(local) {
         else{
             //console.log("02");
             let result = new Promise((resolve, reject) => {
-                let url = `${openweathermapHost}/weather?${loc}&appid=${apiKeyClimaTempo}`;
+                let url = `${openweathermapHost}/weather?${local}&appid=${apiKeyClimaTempo}`;
                 https.get(url, (res) => {
                     let body = '';
                     res.on('data', (d) => body += d);
