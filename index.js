@@ -250,10 +250,10 @@ function callOpenCageDataApi(location) {
             res.on('end', () => {
                 let json = JSON.parse(body);
 
-                if(json.results[0].components._type = 'city'){
+                if(json.results[0].components._type == 'city'){
                     resolve('q=' + json.results[0].components.city);
                 }
-                else if(json.results[0].components._type = 'state'){
+                else if(json.results[0].components._type == 'state'){
                     resolve('q=' + json.results[0].components.state);
                 }
                 else {
