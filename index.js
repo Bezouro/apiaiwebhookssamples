@@ -99,12 +99,12 @@ app.post('/webhook', function (req, res) {
         var searchTerm = req.body.queryResult.parameters['wikisearchterm'];
         callWikiPediaApi(searchTerm)
             .then((output) => {
-                let displayText = `nao achei nada sobre ${searchTerm}`;
+                let fulfillmentText = `nao achei nada sobre ${searchTerm}`;
                 let result;
                 if (output && output[0]) {
-                    displayText = `${output[1][0]}: ${output[2][0]}`;
+                    fulfillmentText = `${output[1][0]}: ${output[2][0]}`;
                     let telegramText = htmlEntities(`*${output[1][0]}*: ${output[2][0]} \n\n Read more at [WikiPedia](${output[3][0]})`);
-                    result = toApiAiResponseMessage(displayText, displayText, toTelgramObject(telegramText, 'Markdown'));
+                    result = toApiAiResponseMessage(fulfillmentText, fulfillmentText, toTelgramObject(telegramText, 'Markdown'));
                     console.log("resultado: " + telegramText);
                 }
                 res.setHeader('Content-Type', 'application/json');
@@ -112,7 +112,7 @@ app.post('/webhook', function (req, res) {
                     res.send(JSON.stringify(result));
                 }
                 else {
-                    res.send(JSON.stringify(displayText));
+                    res.send(JSON.stringify(fulfillmentText));
                 }
             });
     }
@@ -120,6 +120,7 @@ app.post('/webhook', function (req, res) {
 
         if(req.body.queryResult.action = 'pergunta.temperatura'){
             var local = req.body.queryResult.parameters['local'];
+            var tipo = req.body.queryResult.parameters['any'];
 
             for(varloc in local){
                 var value = local[varloc];
@@ -132,6 +133,26 @@ app.post('/webhook', function (req, res) {
                             callClimaTempoApi(loc)
                                 .then((json) => {
                                     console.log(json);
+
+                                    let localname = json.name;
+                                    let localtmp = json.main.temp;
+
+                                    let fulfillmentText = `não encontrei ${tipo} de ${value}`;
+                                    let result;
+                                    if (json) {
+                                        fulfillmentText = `${tipo} de ${localname} é ${localtmp}`;
+                                        let telegramText = htmlEntities(`*${output[1][0]}*: ${output[2][0]} \n\n Read more at [WikiPedia](${output[3][0]})`);
+                                        result = toApiAiResponseMessage(fulfillmentText, fulfillmentText, toTelgramObject(telegramText, 'Markdown'));
+                                        console.log("resultado: " + telegramText);
+                                    }
+                                    res.setHeader('Content-Type', 'application/json');
+                                    if (result) {
+                                        res.send(JSON.stringify(result));
+                                    }
+                                    else {
+                                        res.send(JSON.stringify(fulfillmentText));
+                                    }
+
                                 });
                         });
                     break;
@@ -250,7 +271,7 @@ function callOpenCageDataApi(location) {
 
 function callClimaTempoApi(local) {
     return new Promise((resolve, reject) => {
-        let url = `${openweathermapHost}/weather?${local}&appid=${apiKeyClimaTempo}`;
+        let url = `${openweathermapHost}/weather?${local}&units=metric&appid=${apiKeyClimaTempo}`;
         https.get(url, (res) => {
             let body = '';
             res.on('data', (d) => body += d);
@@ -272,10 +293,10 @@ function toTelgramObject(text, parse_mode) {
     }
 }
 
-function toApiAiResponseMessage(speech, displayText, telegramObject = null) {
+function toApiAiResponseMessage(speech, fulfillmentText, telegramObject = null) {
     return {
         speech: speech,
-        fulfillmentText: displayText,
+        fulfillmentText: fulfillmentText,
         data: {
             telegram: telegramObject
         }
