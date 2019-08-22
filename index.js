@@ -121,16 +121,23 @@ app.post('/webhook', function (req, res) {
         if(req.body.queryResult.action = 'pergunta.temperatura'){
             var local = req.body.queryResult.parameters['local'];
 
-            console.log(local);
-
-            console.log("buscando no climatempo");
-            callOpenCageDataApi(local)
-                .then((loc) => {
-                    callClimaTempoApi(loc)
-                        .then((json) => {
-                            console.log(json);
+            for(varloc in local){
+                console.log(varloc);
+                if(!varloc == ''){
+                    console.log(varloc);
+                    console.log("buscando no climatempo");
+                    callOpenCageDataApi(varloc)
+                        .then((loc) => {
+                            callClimaTempoApi(loc)
+                                .then((json) => {
+                                    console.log(json);
+                                });
                         });
-                });
+                    break;
+                }
+            }
+
+            
         }
         else{
             res.setHeader('Content-Type', 'application/json');
