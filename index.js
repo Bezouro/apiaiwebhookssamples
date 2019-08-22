@@ -119,7 +119,9 @@ app.post('/webhook', function (req, res) {
     else {
 
         if(req.body.queryResult.action = 'pergunta.temperatura'){
-            var local = req.body.queryResult.parameters['geo-city'];
+            var local = req.body.queryResult.parameters['local'];
+
+            console.log(local);
 
             console.log("buscando no climatempo");
             callOpenCageDataApi(local)
