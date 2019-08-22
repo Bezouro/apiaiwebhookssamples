@@ -206,41 +206,32 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
 
 function callOpenCageDataApi(location) {
     "https://api.opencagedata.com/geocode/v1/json?key=e5d94660eeb4488d8c24f9e3db9b46de&q=londres&pretty=1&no_annotations=1&language=native"
-    
-    let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`;
-    
-    let body = '';
-    let response = https.get(url);
+    return new Promise((resolve, reject) => {
+        let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`;
+        https.get(url, (res) => {
+            let body = '';
+            res.on('data', (d) => body += d);
+            res.on('end', () => {
+                let jO = JSON.parse(body);
 
-    response.on('data', function(d) {
-        body += d;
+                if(json.results[0].components._type = 'city'){
+                    resolve('q=' + json.results[0].components.city);
+                }
+                else if(json.results[0].components._type = 'state'){
+                    resolve('q=' + json.results[0].components.state);
+                }
+                else {
+                    resolve('lat=' + json.results[0].geometry.lat + '&lon=' + json.results[0].geometry.lng);
+                }
+
+            });
+            res.on('error', (error) => {
+                reject(error);
+            });
+        });
     });
-
-    let json = '';
-
-    response.on('end', function() {
-        json = JSON.parse(body);
-        callback();
-    });
-
-    response.end()
-
-    console.log(json);
-    console.log(body);
-    console.log("");
-
-    return 'Guarulhos';
-
-    // if(json.results[0].components._type = 'city'){
-    //     return 'q=' + json.results[0].components.city;
-    // }
-    // else if(json.results[0].components._type = 'state'){
-    //     return 'q=' + json.results[0].components.state;
-    // }
-    // else {
-    //     return 'lat=' + json.results[0].geometry.lat + '&lon=' + json.results[0].geometry.lng;
-    // }
 }
+
 function callClimaTempoApi(local) {
 
     let pg = new Client({connectionString: process.env.DATABASE_URL,ssl: true,});
@@ -249,11 +240,7 @@ function callClimaTempoApi(local) {
 
     let loc = callOpenCageDataApi(local);
 
-    console.log("");
-    console.log("");
-    console.log(loc)
-    console.log("");
-    console.log("");
+    Console.log(loc);
 
     pg.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
