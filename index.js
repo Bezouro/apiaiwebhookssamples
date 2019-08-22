@@ -223,15 +223,17 @@ function callOpenCageDataApi(location) {
     console.log(json);
     console.log("");
 
-    if(json.results[0].components._type = 'city'){
-        return 'q=' + json.results[0].components.city;
-    }
-    else if(json.results[0].components._type = 'state'){
-        return 'q=' + json.results[0].components.state;
-    }
-    else {
-        return 'lat=' + json.results[0].geometry.lat + '&lon=' + json.results[0].geometry.lng;
-    }
+    return 'Guarulhos';
+
+    // if(json.results[0].components._type = 'city'){
+    //     return 'q=' + json.results[0].components.city;
+    // }
+    // else if(json.results[0].components._type = 'state'){
+    //     return 'q=' + json.results[0].components.state;
+    // }
+    // else {
+    //     return 'lat=' + json.results[0].geometry.lat + '&lon=' + json.results[0].geometry.lng;
+    // }
 }
 function callClimaTempoApi(local) {
 
