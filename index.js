@@ -160,6 +160,36 @@ app.post('/webhook', function (req, res) {
 
             
         }
+        else if(req.body.queryResult.action = 'calculos.soma'){
+            var numeros = req.body.queryResult.parameters['number'];
+
+            var resultado = 0;
+            var calculo = '';
+            var firstiteration = true;
+            
+            numeros.forEach(element => {
+                resultado = resultado + element;
+                if(firstiteration){
+                    calculo = calculo + element;
+                }
+                else{
+                    calculo = calculo + ' + ' + element ;
+                }
+            });
+
+            fulfillmentText = `o resultado de [${calculo}] é: ${resultado}`;
+            let telegramText = htmlEntities(`*${calculo}*: ${resultado}`);
+            result = toApiAiResponseMessage(fulfillmentText, fulfillmentText, toTelgramObject(telegramText, 'Markdown'));
+            console.log("resultado: " + telegramText);
+            
+            res.setHeader('Content-Type', 'application/json');
+            if (result) {
+                res.send(JSON.stringify(result));
+            }
+            else {
+                res.send(JSON.stringify(fulfillmentText));
+            }
+        }
         else{
             res.setHeader('Content-Type', 'application/json');
             res.send(JSON.stringify({ 'speech': "No Proper hook found", 'displayText': "No Proper hook found" }));
