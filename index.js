@@ -123,10 +123,11 @@ app.post('/webhook', function (req, res) {
 
             for(varloc in local){
                 console.log(varloc);
-                if(!varloc == ''){
-                    console.log(varloc);
+                var value = local[varloc];
+                if(!value == ''){
+                    console.log(value);
                     console.log("buscando no climatempo");
-                    callOpenCageDataApi(varloc)
+                    callOpenCageDataApi(value)
                         .then((loc) => {
                             callClimaTempoApi(loc)
                                 .then((json) => {
