@@ -241,7 +241,7 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
 
 function callOpenCageDataApi(location) {
     return new Promise((resolve, reject) => {
-        let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`;
+        let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`.replace(" ","%20");
         console.log('Request URL: ' + url);
         https.get(url, (res) => {
             let body = '';
