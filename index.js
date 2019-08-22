@@ -166,20 +166,23 @@ app.post('/webhook', function (req, res) {
             var resultado = 0;
             var calculo = '';
             var firstiteration = true;
-            
+
             numeros.forEach(element => {
                 resultado = resultado + element;
                 if(firstiteration){
-                    calculo = calculo + element;
+                    calculo = calculo + ' ' + element;
                 }
                 else{
                     calculo = calculo + ' + ' + element ;
                 }
             });
 
-            fulfillmentText = `o resultado de [${calculo}] é: ${resultado}`;
+            console.log('Resultado: ' + resultado);
+            console.log('Calculo: ' + calculo);
+
+            let fulfillmentText = `o resultado de [${calculo}] é: ${resultado}`;
             let telegramText = htmlEntities(`*${calculo}*: ${resultado}`);
-            result = toApiAiResponseMessage(fulfillmentText, fulfillmentText, toTelgramObject(telegramText, 'Markdown'));
+            let result = toApiAiResponseMessage(fulfillmentText, fulfillmentText, toTelgramObject(telegramText, 'Markdown'));
             console.log("resultado: " + telegramText);
             
             res.setHeader('Content-Type', 'application/json');
