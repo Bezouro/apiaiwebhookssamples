@@ -223,7 +223,8 @@ function callOpenCageDataApi(location) {
 
     request.then(
     function(json) {
-        //console.log(json.results[0].components._type);
+        console.log(json.results[0].components);
+        console.log("");
         if(json.results[0].components._type = 'city'){
             return 'q=' + json.results[0].components.city;
         }
