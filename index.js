@@ -223,9 +223,16 @@ function callOpenCageDataApi(location) {
 
     request.then(
     function(json) {
-        console.log(json);
-        console.log(json.results[0].components._type);
-        console.log(json.results[0].components.city);
+        //console.log(json.results[0].components._type);
+        if(json.results[0].components._type = 'city'){
+            return 'q=' + json.results[0].components.city;
+        }
+        else if(json.results[0].components._type = 'state'){
+            return 'q=' + json.results[0].components.state;
+        }
+        else {
+            return 'lat=' + json.results[0].geometry.lat + '&lon=' + json.results[0].geometry.lng;
+        }
     });
 }
 function callClimaTempoApi(local) {
@@ -234,7 +241,7 @@ function callClimaTempoApi(local) {
 
     pg.connect();
 
-    callOpenCageDataApi(local);
+    let loc = callOpenCageDataApi(local);
 
     pg.query('SELECT name,id FROM locationids;', (err, res) => {
         if (err) throw err;
@@ -248,21 +255,20 @@ function callClimaTempoApi(local) {
     pg.query(`SELECT name,id FROM locationids WHERE name='${local}';`, (err, res) => {
         if (err) throw err;
         if(res.rows[0]){
-            console.log("01");
-            console.log("a ->" + JSON.stringify(rows[0]));
+            //console.log("01");
+            //console.log("a ->" + JSON.stringify(rows[0]));
         }
         else{
-            console.log("02");
+            //console.log("02");
             let result = new Promise((resolve, reject) => {
-                let tempurl = 'weather?q=guarulhos&appid=386a097769d5f92888cbc4fdfbbc4cef';
-                let url = `${openweathermapHost}/weather?q=${local}&appid=${apiKeyClimaTempo}`;
+                let url = `${openweathermapHost}/weather?${loc}&appid=${apiKeyClimaTempo}`;
                 https.get(url, (res) => {
                     let body = '';
                     res.on('data', (d) => body += d);
                     res.on('end', () => {
                         let jO = JSON.parse(body);
                         resolve(jO);
-                        console.log(body);
+                        //console.log(body);
                     });
                     res.on('error', (error) => {
                         reject(error);
