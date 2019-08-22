@@ -221,20 +221,24 @@ function callOpenCageDataApi(location) {
         });
     });
 
+    let locale;
+
     request.then(
     function(json) {
         console.log(json.results[0].components);
         console.log("");
         if(json.results[0].components._type = 'city'){
-            return 'q=' + json.results[0].components.city;
+            locale = 'q=' + json.results[0].components.city;
         }
         else if(json.results[0].components._type = 'state'){
-            return 'q=' + json.results[0].components.state;
+            locale = 'q=' + json.results[0].components.state;
         }
         else {
-            return 'lat=' + json.results[0].geometry.lat + '&lon=' + json.results[0].geometry.lng;
+            locale = 'lat=' + json.results[0].geometry.lat + '&lon=' + json.results[0].geometry.lng;
         }
     });
+
+    return locale;
 }
 function callClimaTempoApi(local) {
 
