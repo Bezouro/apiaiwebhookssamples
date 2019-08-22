@@ -162,7 +162,7 @@ app.post('/webhook', function (req, res) {
         }
         else if(req.body.queryResult.action = 'calculos.soma'){
 
-            console.log(req.body.queryResult.parameters)
+            console.log('Somando!');
 
             var numeros = req.body.queryResult.parameters['number'];
 
