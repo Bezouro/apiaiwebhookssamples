@@ -122,8 +122,8 @@ app.post('/webhook', function (req, res) {
             var local = req.body.queryResult.parameters['local'];
 
             for(varloc in local){
-                console.log(varloc);
                 var value = local[varloc];
+                console.log(value);
                 if(!value == ''){
                     console.log(value);
                     console.log("buscando no climatempo");
