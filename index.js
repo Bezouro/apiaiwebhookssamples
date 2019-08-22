@@ -172,8 +172,7 @@ app.post('/webhook', function (req, res) {
             let calculo = '';
             let firstiteration = true;
 
-            for(number in numeros){
-
+            numeros.forEach(number => {
                 console.log(number);
 
                 resultado = resultado + parseInt(number);
@@ -184,7 +183,7 @@ app.post('/webhook', function (req, res) {
                 else{
                     calculo = calculo + ' + ' + number ;
                 }
-            }
+            });
 
             console.log('Resultado: ' + resultado);
             console.log('Calculo: ' + calculo);
