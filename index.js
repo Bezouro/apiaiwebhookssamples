@@ -217,7 +217,7 @@ function callOpenCageDataApi(location) {
     });
 
     response.on('end', function() {
-        var parsed = JSON.parse(body);
+        var json = JSON.parse(body);
         callback();
     });
 
