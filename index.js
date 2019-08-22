@@ -206,39 +206,32 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
 
 function callOpenCageDataApi(location) {
     "https://api.opencagedata.com/geocode/v1/json?key=e5d94660eeb4488d8c24f9e3db9b46de&q=londres&pretty=1&no_annotations=1&language=native"
-    let request = new Promise((resolve, reject) => {
-        let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`;
-        https.get(url, (res) => {
-            let body = '';
-            res.on('data', (d) => body += d);
-            res.on('end', () => {
-                let jO = JSON.parse(body);
-                resolve(jO);
-            });
-            res.on('error', (error) => {
-                reject(error);
-            });
+    
+    let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`;
+    let json;
+    
+    https.get(url, (res) => {
+        let body = '';
+        res.on('data', (d) => body += d);
+        res.on('end', () => {
+            json = JSON.parse(body);
+        });
+        res.on('error', (error) => {
         });
     });
 
-    let locale;
+    console.log(json.results[0].components);
+    console.log("");
 
-    request.then(
-    function(json) {
-        console.log(json.results[0].components);
-        console.log("");
-        if(json.results[0].components._type = 'city'){
-            locale = 'q=' + json.results[0].components.city;
-        }
-        else if(json.results[0].components._type = 'state'){
-            locale = 'q=' + json.results[0].components.state;
-        }
-        else {
-            locale = 'lat=' + json.results[0].geometry.lat + '&lon=' + json.results[0].geometry.lng;
-        }
-    });
-
-    return locale;
+    if(json.results[0].components._type = 'city'){
+        return 'q=' + json.results[0].components.city;
+    }
+    else if(json.results[0].components._type = 'state'){
+        return 'q=' + json.results[0].components.state;
+    }
+    else {
+        return 'lat=' + json.results[0].geometry.lat + '&lon=' + json.results[0].geometry.lng;
+    }
 }
 function callClimaTempoApi(local) {
 
