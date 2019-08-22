@@ -39,9 +39,7 @@ app.get('/dummyget', function (req, res) {
 app.post('/webhook', function (req, res) {
 
     console.log("");
-    console.log("");
     console.log(req.body.queryResult.action);
-    console.log("");
     console.log("");
     
     if (req.body.queryResult.parameters['Bored']) {
@@ -132,7 +130,7 @@ app.post('/webhook', function (req, res) {
                             console.log(loc);
                             callClimaTempoApi(loc)
                                 .then((json) => {
-                                    console.log(json);
+                                    //console.log(json);
 
                                     let localname = json.name;
                                     let localtmp = json.main.temp;
@@ -140,8 +138,8 @@ app.post('/webhook', function (req, res) {
                                     let fulfillmentText = `não encontrei ${tipo} de ${value}`;
                                     let result;
                                     if (json) {
-                                        fulfillmentText = `${tipo} de ${localname} é ${localtmp}`;
-                                        let telegramText = htmlEntities(`*${tipo} de ${localname}*: ${localtmp}`);
+                                        fulfillmentText = `a temperatura de ${localname} é ${localtmp}º graus celsius`;
+                                        let telegramText = htmlEntities(`*${tipo} de ${localname}*: ${localtmp}º`);
                                         result = toApiAiResponseMessage(fulfillmentText, fulfillmentText, toTelgramObject(telegramText, 'Markdown'));
                                         console.log("resultado: " + telegramText);
                                     }
