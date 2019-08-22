@@ -141,7 +141,7 @@ app.post('/webhook', function (req, res) {
                                     let result;
                                     if (json) {
                                         fulfillmentText = `${tipo} de ${localname} é ${localtmp}`;
-                                        let telegramText = htmlEntities(`*${output[1][0]}*: ${output[2][0]} \n\n Read more at [WikiPedia](${output[3][0]})`);
+                                        let telegramText = htmlEntities(`*${tipo} de ${localname}*: ${localtmp}`);
                                         result = toApiAiResponseMessage(fulfillmentText, fulfillmentText, toTelgramObject(telegramText, 'Markdown'));
                                         console.log("resultado: " + telegramText);
                                     }
