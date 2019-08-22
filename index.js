@@ -100,7 +100,8 @@ app.post('/webhook', function (req, res) {
                 let fulfillmentText = `nao achei nada sobre ${searchTerm}`;
                 let result;
                 if (output && output[0]) {
-                    fulfillmentText = `${output[1][0]}: ${output[2][0]}`;
+                    //fulfillmentText = `${output[1][0]}: ${output[2][0]}`;
+                    fulfillmentText = `${output[2][0]}`;
                     let telegramText = htmlEntities(`*${output[1][0]}*: ${output[2][0]} \n\n Read more at [WikiPedia](${output[3][0]})`);
                     result = toApiAiResponseMessage(fulfillmentText, fulfillmentText, toTelgramObject(telegramText, 'Markdown'));
                     console.log("resultado: " + telegramText);
