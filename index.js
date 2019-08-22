@@ -241,7 +241,7 @@ function callWikiPediaApi(searchTerm, format = "json", action = "opensearch", li
 
 function callOpenCageDataApi(location) {
     return new Promise((resolve, reject) => {
-        let url = `${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`.replace(" ","%20");
+        let url = encodeURI(`${openCageDataHost}/json?key=${apiKeyOpenCageData}&q=${location}&no_annotations=1&language=native`);
         console.log('Request URL: ' + url);
         https.get(url, (res) => {
             let body = '';
@@ -270,7 +270,7 @@ function callOpenCageDataApi(location) {
 
 function callOpenWeatherMapApi(local) {
     return new Promise((resolve, reject) => {
-        let url = `${openweathermapHost}/weather?${local}&units=metric&appid=${apiKeyOpenWeatherMap}`;
+        let url = encodeURI(`${openweathermapHost}/weather?${local}&units=metric&appid=${apiKeyOpenWeatherMap}`);
         console.log('Request URL: ' + url);
         https.get(url, (res) => {
             let body = '';
