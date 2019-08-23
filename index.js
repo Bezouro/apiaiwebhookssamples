@@ -3,7 +3,7 @@ const https = require('https');
 const express = require('express');
 const { Client } = require('pg');
 const bodyParser = require('body-parser');
-const expr = require('expression-eval');
+const expr = require('math-expression-evaluator');
 const app = express();
 
 app.use(bodyParser.json());
