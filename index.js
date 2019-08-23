@@ -169,7 +169,7 @@ app.post('/webhook', function (req, res) {
 
             console.log(calculo);
 
-            const resultado = expr.parse(calculo);
+            const resultado = expr.eval(calculo);
 
             console.log('Resultado: ' + resultado);
             console.log('Calculo: ' + calculo);
